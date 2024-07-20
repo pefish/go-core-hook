@@ -20,10 +20,17 @@ func NewBrotliEncoder() *BrotliEncoder {
 var BrotliEncoderInstance = NewBrotliEncoder()
 
 func (be *BrotliEncoder) Encode(apiSession api_session.IApiSession, apiResult *go_core_type_api.ApiResult) (interface{}, *go_error.ErrorInfo) {
+	toEncodeData := ""
+	if apiResult.Code != 0 {
+		toEncodeData = apiResult.Msg
+	} else {
+		toEncodeData = apiResult.Data.(string)
+	}
+
 	var b bytes.Buffer
 	bw := brotli.NewWriter(nil)
 	bw.Reset(&b)
-	if _, err := io.WriteString(bw, apiResult.Data.(string)); err != nil {
+	if _, err := io.WriteString(bw, toEncodeData); err != nil {
 		apiSession.Logger().Error(err)
 		return nil, go_error.INTERNAL_ERROR
 	}
