@@ -4,12 +4,6 @@
 
 go-core-hook
 
-## Quick start
-
-```go
-
-```
-
 ## Document
 
 [doc](https://godoc.org/github.com/pefish/go-core-hook)
