@@ -5,9 +5,9 @@ import (
 	"io"
 
 	"github.com/andybalholm/brotli"
-	go_core_type_api "github.com/pefish/go-core-type/api"
-	api_session "github.com/pefish/go-core-type/api-session"
-	go_error "github.com/pefish/go-error"
+	i_core "github.com/pefish/go-interface/i-core"
+	t_core "github.com/pefish/go-interface/t-core"
+	t_error "github.com/pefish/go-interface/t-error"
 )
 
 type BrotliEncoder struct {
@@ -19,7 +19,7 @@ func NewBrotliEncoder() *BrotliEncoder {
 
 var BrotliEncoderInstance = NewBrotliEncoder()
 
-func (be *BrotliEncoder) Encode(apiSession api_session.IApiSession, apiResult *go_core_type_api.ApiResult) (interface{}, *go_error.ErrorInfo) {
+func (be *BrotliEncoder) Encode(apiSession i_core.IApiSession, apiResult *t_core.ApiResult) (interface{}, *t_error.ErrorInfo) {
 	toEncodeData := ""
 	if apiResult.Code != 0 {
 		toEncodeData = apiResult.Msg
@@ -32,11 +32,11 @@ func (be *BrotliEncoder) Encode(apiSession api_session.IApiSession, apiResult *g
 	bw.Reset(&b)
 	if _, err := io.WriteString(bw, toEncodeData); err != nil {
 		apiSession.Logger().Error(err)
-		return nil, go_error.INTERNAL_ERROR
+		return nil, t_error.INTERNAL_ERROR
 	}
 	if err := bw.Close(); err != nil {
 		apiSession.Logger().Error(err)
-		return nil, go_error.INTERNAL_ERROR
+		return nil, t_error.INTERNAL_ERROR
 	}
 
 	apiSession.ResponseWriter().Header().Set("Content-Type", "text/html; charset=UTF-8")
